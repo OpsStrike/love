@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>❤️</title>
   <style>
+    /* Основные стили для страницы */
     body {
       display: flex;
       justify-content: center;
@@ -15,18 +16,20 @@
       overflow: hidden;
     }
 
+    /* Стили для сердца */
     .heart {
       position: relative;
-      width: 50vmin; /* Размер сердца в зависимости от размера экрана */
-      height: 50vmin; /* Чтобы сердце было квадратным */
+      width: 40vmin; /* Используем vmin для пропорциональности */
+      height: 40vmin; /* Сердце будет квадратным */
       background: red;
-      transform: rotate(-45deg);
+      transform: rotate(-45deg); /* Поворачиваем сердце */
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: visible;
     }
 
+    /* Полукруги для сердца */
     .heart:before, .heart:after {
       content: '';
       position: absolute;
@@ -46,12 +49,13 @@
       top: 0;
     }
 
-    /* Анимация пульсации */
+    /* Анимация пульсации сердца */
     @keyframes pulse {
       0% { transform: rotate(-45deg) scale(1); }
       100% { transform: rotate(-45deg) scale(1.1); }
     }
 
+    /* Стили для текста */
     .text {
       position: absolute;
       color: white;
@@ -60,8 +64,8 @@
       text-align: center;
       opacity: 0;
       animation: fadein 2s ease-in-out forwards 1s;
-      top: -10%;
-      font-size: 8vw; /* Мобильный размер шрифта по ширине экрана */
+      top: 10%;
+      font-size: 4vw; /* Используем vw для масштаба текста */
     }
 
     /* Анимация появления текста */
@@ -70,26 +74,26 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* Медиазапросы для адаптивности */
+    /* Медиазапросы для мобильных устройств */
     @media (max-width: 768px) {
       .heart {
-        width: 60vmin; /* Увеличиваем сердце на планшетах */
-        height: 60vmin;
+        width: 50vmin; /* Увеличиваем сердце на планшетах */
+        height: 50vmin;
       }
 
       .text {
-        font-size: 10vw; /* Увеличиваем шрифт на мобильных устройствах */
+        font-size: 6vw; /* Увеличиваем шрифт на мобильных устройствах */
       }
     }
 
     @media (max-width: 480px) {
       .heart {
-        width: 70vmin; /* На очень маленьких экранах увеличиваем сердце */
-        height: 70vmin;
+        width: 60vmin; /* Увеличиваем сердце на очень маленьких экранах */
+        height: 60vmin;
       }
 
       .text {
-        font-size: 12vw; /* Еще больший шрифт для маленьких экранов */
+        font-size: 8vw; /* Увеличиваем шрифт на маленьких экранах */
       }
     }
   </style>
