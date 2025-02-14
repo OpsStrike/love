@@ -1,1 +1,74 @@
-<iframe src="data:text/html;charset=UTF-8,<html><head><title>❤️</title><meta charset='UTF-8'><style>body{display:flex;justify-content:center;align-items:center;height:100vh;background:white;margin:0;overflow:hidden}.heart{position:relative;width:400px;height:400px;background:red;transform:rotate(-45deg);animation:pulse 1s infinite alternate;display:flex;justify-content:center;align-items:center;overflow:visible}.heart:before,.heart:after{content:'';position:absolute;width:400px;height:400px;background:red;border-radius:50%}.heart:before{top:-200px;left:0}.heart:after{left:200px;top:0}@keyframes pulse{0%{transform:rotate(-45deg) scale(1)}100%{transform:rotate(-45deg) scale(1.1)}}.text{position:absolute;color:white;font-size:36px;font-family:sans-serif;font-weight:bold;text-align:center;opacity:0;animation:fadein 2s ease-in-out forwards 1s;top:-20px}@keyframes fadein{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}</style></head><body><div class='heart'><div class='text'>Я люблю тебя ❤️</div></div></body></html>" width="100%" height="100%" style="border:none;"></iframe>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>❤️</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: white;
+      margin: 0;
+      overflow: hidden;
+    }
+    .heart {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      background: red;
+      transform: rotate(-45deg);
+      animation: pulse 1s infinite alternate;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+    }
+    .heart:before, .heart:after {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: red;
+      border-radius: 50%;
+    }
+    .heart:before {
+      top: -200px;
+      left: 0;
+    }
+    .heart:after {
+      left: 200px;
+      top: 0;
+    }
+    @keyframes pulse {
+      0% { transform: rotate(-45deg) scale(1); }
+      100% { transform: rotate(-45deg) scale(1.1); }
+    }
+    .text {
+      position: absolute;
+      color: white;
+      font-size: 36px;
+      font-family: sans-serif;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      animation: fadein 2s ease-in-out forwards 1s;
+      top: -20px;
+    }
+    @keyframes fadein {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart">
+    <div class="text" id="text">Я люблю тебя ❤️</div>
+  </div>
+
+  <script>
+    document.getElementById("text").textContent = "Я люблю тебя ❤️";
+  </script>
+</body>
+</html>
