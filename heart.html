@@ -5,93 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>❤️</title>
   <style>
-    /* Центрируем содержимое по вертикали и горизонтали */
     body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
       background: white;
+      margin: 0;
+      overflow: hidden;
     }
-
-    /* Блок, формирующий сердце (повёрнут на -45 градусов) */
     .heart {
       position: relative;
-      width: 30vmin;     /* Размер сердца относительно экрана */
-      height: 30vmin;
+      width: 80vmin; /* Задаем ширину через вьюпорт */
+      height: 80vmin; /* Задаем высоту через вьюпорт */
       background: red;
-      transform: rotate(-45deg); /* Наклоняем сердце */
+      transform: rotate(-45deg);
+      animation: pulse 1s infinite alternate;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
     }
-
-    /* Две полукруглые верхушки сердца */
-    .heart::before,
-    .heart::after {
+    .heart:before, .heart:after {
       content: '';
       position: absolute;
-      width: 30vmin;
-      height: 30vmin;
+      width: 100%;
+      height: 100%;
       background: red;
       border-radius: 50%;
     }
-    .heart::before {
-      top: -15vmin;
+    .heart:before {
+      top: -50%;
       left: 0;
     }
-    .heart::after {
+    .heart:after {
+      left: 50%;
       top: 0;
-      left: 15vmin;
     }
-
-    /*
-      Вложенный блок, «откручивающий» сердце обратно на +45 градусов,
-      чтобы текст был ровным, а не наклонённым
-    */
-    .heart-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 30vmin;
-      height: 30vmin;
-      transform: rotate(45deg); /* Возвращаем текст в нормальный угол */
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    @keyframes pulse {
+      0% { transform: rotate(-45deg) scale(1); }
+      100% { transform: rotate(-45deg) scale(1.1); }
     }
-
-    /* Стиль текста */
     .text {
+      position: absolute;
       color: white;
+      font-size: 10vw; /* Размер шрифта зависит от ширины экрана */
       font-family: sans-serif;
       font-weight: bold;
-      font-size: 3vmin;       /* Адаптивный размер шрифта */
       text-align: center;
       opacity: 0;
-      animation: fadein 2s ease-in-out forwards 1s; /* Плавное появление */
+      animation: fadein 2s ease-in-out forwards 1s;
+      top: -20px;
     }
-
-    /* Анимация плавного появления текста */
     @keyframes fadein {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* Медиазапросы для разных размеров экранов */
+    @media (max-width: 768px) {
+      .text {
+        font-size: 12vw; /* Для маленьких экранов увеличиваем размер текста */
       }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
+    }
+    @media (max-width: 480px) {
+      .text {
+        font-size: 15vw; /* Для очень маленьких экранов делаем текст еще больше */
       }
     }
   </style>
 </head>
 <body>
   <div class="heart">
-    <!-- Вложенный блок для «выравнивания» текста -->
-    <div class="heart-inner">
-      <div class="text">Я люблю тебя ❤️</div>
-    </div>
+    <div class="text" id="text">Я люблю тебя ❤️</div>
   </div>
 </body>
 </html>
