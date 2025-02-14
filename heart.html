@@ -1,1 +1,82 @@
-data:text/html;charset=UTF-8,<html><head><title>❤️</title><meta charset="UTF-8"><style>body{display:flex;justify-content:center;align-items:center;height:100vh;background:white;margin:0;overflow:hidden}.heart{position:relative;width:400px;height:400px;background:red;transform:rotate(-45deg);animation:pulse 1s infinite alternate;display:flex;justify-content:center;align-items:center;overflow:visible}.heart:before,.heart:after{content:'';position:absolute;width:400px;height:400px;background:red;border-radius:50%}.heart:before{top:-200px;left:0}.heart:after{left:200px;top:0}@keyframes pulse{0%{transform:rotate(-45deg) scale(1)}100%{transform:rotate(-45deg) scale(1.1)}}.text{position:absolute;color:white;font-size:36px;font-family:sans-serif;font-weight:bold;text-align:center;opacity:0;animation:fadein 2s ease-in-out forwards 1s;top:-20px}@keyframes fadein{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}</style></head><body><div class="heart"><div class="text">Я люблю тебя ❤️</div></div></body></html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>❤️</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: white;
+      margin: 0;
+      overflow: hidden;
+    }
+    .heart {
+      position: relative;
+      width: 80vmin; /* Задаем ширину через вьюпорт */
+      height: 80vmin; /* Задаем высоту через вьюпорт */
+      background: red;
+      transform: rotate(-45deg);
+      animation: pulse 1s infinite alternate;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+    }
+    .heart:before, .heart:after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: red;
+      border-radius: 50%;
+    }
+    .heart:before {
+      top: -50%;
+      left: 0;
+    }
+    .heart:after {
+      left: 50%;
+      top: 0;
+    }
+    @keyframes pulse {
+      0% { transform: rotate(-45deg) scale(1); }
+      100% { transform: rotate(-45deg) scale(1.1); }
+    }
+    .text {
+      position: absolute;
+      color: white;
+      font-size: 10vw; /* Размер шрифта зависит от ширины экрана */
+      font-family: sans-serif;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      animation: fadein 2s ease-in-out forwards 1s;
+      top: -20px;
+    }
+    @keyframes fadein {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* Медиазапросы для разных размеров экранов */
+    @media (max-width: 768px) {
+      .text {
+        font-size: 12vw; /* Для маленьких экранов увеличиваем размер текста */
+      }
+    }
+    @media (max-width: 480px) {
+      .text {
+        font-size: 15vw; /* Для очень маленьких экранов делаем текст еще больше */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart">
+    <div class="text" id="text">Я люблю тебя ❤️</div>
+  </div>
+</body>
+</html>
