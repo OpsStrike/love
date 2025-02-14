@@ -14,18 +14,19 @@
       margin: 0;
       overflow: hidden;
     }
+
     .heart {
       position: relative;
-      width: 80vmin; /* Задаем ширину через вьюпорт */
-      height: 80vmin; /* Задаем высоту через вьюпорт */
+      width: 50vmin; /* Размер сердца в зависимости от размера экрана */
+      height: 50vmin; /* Чтобы сердце было квадратным */
       background: red;
       transform: rotate(-45deg);
-      animation: pulse 1s infinite alternate;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: visible;
     }
+
     .heart:before, .heart:after {
       content: '';
       position: absolute;
@@ -34,49 +35,68 @@
       background: red;
       border-radius: 50%;
     }
+
     .heart:before {
       top: -50%;
       left: 0;
     }
+
     .heart:after {
       left: 50%;
       top: 0;
     }
+
+    /* Анимация пульсации */
     @keyframes pulse {
       0% { transform: rotate(-45deg) scale(1); }
       100% { transform: rotate(-45deg) scale(1.1); }
     }
+
     .text {
       position: absolute;
       color: white;
-      font-size: 10vw; /* Размер шрифта зависит от ширины экрана */
       font-family: sans-serif;
       font-weight: bold;
       text-align: center;
       opacity: 0;
       animation: fadein 2s ease-in-out forwards 1s;
-      top: -20px;
+      top: -10%;
+      font-size: 8vw; /* Мобильный размер шрифта по ширине экрана */
     }
+
+    /* Анимация появления текста */
     @keyframes fadein {
       0% { opacity: 0; transform: translateY(20px); }
       100% { opacity: 1; transform: translateY(0); }
     }
-    /* Медиазапросы для разных размеров экранов */
+
+    /* Медиазапросы для адаптивности */
     @media (max-width: 768px) {
+      .heart {
+        width: 60vmin; /* Увеличиваем сердце на планшетах */
+        height: 60vmin;
+      }
+
       .text {
-        font-size: 12vw; /* Для маленьких экранов увеличиваем размер текста */
+        font-size: 10vw; /* Увеличиваем шрифт на мобильных устройствах */
       }
     }
+
     @media (max-width: 480px) {
+      .heart {
+        width: 70vmin; /* На очень маленьких экранах увеличиваем сердце */
+        height: 70vmin;
+      }
+
       .text {
-        font-size: 15vw; /* Для очень маленьких экранов делаем текст еще больше */
+        font-size: 12vw; /* Еще больший шрифт для маленьких экранов */
       }
     }
   </style>
 </head>
 <body>
   <div class="heart">
-    <div class="text" id="text">Я люблю тебя ❤️</div>
+    <div class="text">Я люблю тебя ❤️</div>
   </div>
 </body>
 </html>
