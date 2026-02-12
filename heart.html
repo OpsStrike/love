@@ -8,7 +8,7 @@
     <style>
         :root {
             --primary-red: #ff3366;
-            --heart-glow: rgba(255, 51, 102, 0.6);
+            --heart-glow: rgba(255, 51, 102, 0.7);
             --bg-dark: #0f0212;
             --warm-gradient: linear-gradient(45deg, #ff3366, #ff6633, #ffcc00, #ff3366);
             --heart-size: 15rem;
@@ -27,11 +27,6 @@
             .subtitle {
                 font-size: 1.2rem !important;
             }
-
-            .falling-comment {
-                font-size: 0.8rem !important;
-                padding: 0.5rem 1rem !important;
-            }
         }
 
         * {
@@ -45,6 +40,7 @@
             background-image:
                 radial-gradient(circle at 50% 50%, #2d0b28 0%, #0f0212 100%);
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -53,10 +49,9 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: white;
             perspective: 2000px;
-            /* Stronger perspective for depth */
         }
 
-        /* --- BACKGROUND BLOOM & GLOWS --- */
+        /* --- BACKGROUND EFFECTS --- */
         .glow {
             position: absolute;
             width: 40vw;
@@ -92,18 +87,16 @@
         }
 
         /* --- VOLUMETRIC 3D HEART --- */
-        .heart-3d-container {
+        .heart-3d-scene {
             position: relative;
             z-index: 10;
             width: var(--heart-size);
             height: var(--heart-size);
             cursor: pointer;
             transform-style: preserve-3d;
-            transition: transform 0.3s;
-        }
-
-        .heart-3d-container:hover {
-            transform: scale(1.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .heart-rotation-group {
@@ -111,61 +104,70 @@
             height: 100%;
             transform-style: preserve-3d;
             animation:
-                rotate-360 8s infinite linear,
+                rotate-3d 6s infinite linear,
                 beat-3d 1.5s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* Creating 20 layers for extrusion */
         .heart-layer {
             position: absolute;
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Optimized coherent heart shape */
+        .heart-shape-3d {
+            position: relative;
+            width: 60%;
+            height: 60%;
+            background: var(--warm-gradient);
+            background-size: 300% 300%;
+            transform: rotate(-45deg);
+            animation: gradient-move 5s infinite linear;
+        }
+
+        .heart-shape-3d::before,
+        .heart-shape-3d::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            background-size: inherit;
+            border-radius: 50%;
+        }
+
+        .heart-shape-3d::before {
+            top: -50%;
             left: 0;
+        }
+
+        .heart-shape-3d::after {
+            left: 50%;
             top: 0;
         }
 
-        /* The actual heart shape */
-        .heart-shape {
-            position: absolute;
-            width: 50%;
-            height: 80%;
-            background: var(--warm-gradient);
-            background-size: 200% 200%;
-            border-radius: 50% 50% 0 0;
-            left: 50%;
-            transform-origin: 0 100%;
-            /* Bottom tip point */
-            box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
-        }
-
-        .heart-shape.left {
-            transform: rotate(-45deg) translateX(-100%);
-        }
-
-        .heart-shape.right {
-            transform: rotate(45deg);
-        }
-
-        /* Shading for depth - darker colors for deeper layers */
-        .heart-layer:not(:last-child) .heart-shape {
-            filter: brightness(0.6) saturate(1.2);
+        /* Shading to make it look volumetric */
+        .heart-layer:not(.front) .heart-shape-3d {
+            filter: brightness(0.5);
             box-shadow: none;
         }
 
-        /* Inner core glow */
-        .heart-layer.center .heart-shape {
-            filter: brightness(1.1) contrast(1.2);
-            box-shadow: 0 0 40px var(--primary-red);
+        .heart-layer.front .heart-shape-3d {
+            box-shadow: 0 0 30px var(--primary-red);
+            filter: brightness(1.2);
         }
 
-        @keyframes rotate-360 {
-            0% {
-                transform: rotateY(0deg);
+        @keyframes rotate-3d {
+            from {
+                transform: rotateY(0deg) rotateX(10deg);
             }
 
-            100% {
-                transform: rotateY(360deg);
+            to {
+                transform: rotateY(360deg) rotateX(10deg);
             }
         }
 
@@ -173,39 +175,57 @@
 
             0%,
             100% {
-                transform: scale(1);
+                scale: 1;
             }
 
             15% {
-                transform: scale(1.2) translateY(-10px);
+                scale: 1.2;
             }
 
             30% {
-                transform: scale(1);
+                scale: 1;
             }
 
             45% {
-                transform: scale(1.1) translateY(-5px);
+                scale: 1.1;
+            }
+        }
+
+        @keyframes gradient-move {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
             }
         }
 
         /* --- TEXT ELEMENTS --- */
         .title {
-            margin-top: 4rem;
-            font-size: 4rem;
+            margin-top: 3rem;
+            font-size: 3.5rem;
             font-weight: 900;
             text-align: center;
-            opacity: 0;
-            animation: fadeInTitle 2s forwards 0.5s;
             background: linear-gradient(90deg, #fff, #ffcc00, #ff3366, #ffcc00, #fff);
             background-size: 200% auto;
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0.5rem 1.5rem rgba(255, 51, 102, 0.4);
+            text-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+            animation: shimmer 3s infinite linear;
             z-index: 20;
-            animation:
-                fadeInTitle 2s forwards 0.5s,
-                shimmer 3s infinite linear;
+        }
+
+        .subtitle {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            z-index: 20;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         @keyframes shimmer {
@@ -214,40 +234,7 @@
             }
         }
 
-        .subtitle {
-            margin-top: 1rem;
-            font-size: 1.8rem;
-            opacity: 0;
-            animation: fadeIn 2s forwards 2.5s;
-            z-index: 20;
-            text-shadow: 0 0 0.8rem rgba(255, 255, 255, 0.4);
-        }
-
-        @keyframes fadeInTitle {
-            0% {
-                opacity: 0;
-                transform: translateY(2rem) scale(0.9);
-                filter: blur(1rem);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* --- ELEMENTS --- */
+        /* --- ANIMATED ELEMENTS --- */
         .star {
             position: absolute;
             background: white;
@@ -256,35 +243,29 @@
             z-index: 1;
         }
 
-        .falling-comment {
+        .flyer {
             position: absolute;
-            background: rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(10px);
-            padding: 0.8rem 1.5rem;
-            border-radius: 2rem;
-            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 1rem;
             color: white;
             white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             pointer-events: none;
             z-index: 5;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .flare {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
-            mix-blend-mode: screen;
             z-index: 15;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 20%);
         }
     </style>
 </head>
@@ -294,9 +275,9 @@
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
 
-    <div class="heart-3d-container" id="heart-container" onclick="createBurst(event)">
+    <div class="heart-3d-scene" onclick="createBurst(event)">
         <div class="heart-rotation-group" id="heart-rotation">
-            <!-- Layers will be generated by JS to keep HTML clean -->
+            <!-- JS will generate 25 layers for thick 3D extrusion -->
         </div>
     </div>
 
@@ -304,120 +285,111 @@
     <div class="subtitle">Люблю тебя ❤️</div>
 
     <script>
-        // Generate Volumetric Layers
+        // 3D Heart Layers Generation
         const rotationGroup = document.getElementById('heart-rotation');
-        const layersCount = 20;
-        for (let i = 0; i < layersCount; i++) {
+        const layers = 25;
+        for (let i = 0; i < layers; i++) {
             const layer = document.createElement('div');
-            layer.className = 'heart-layer';
-            // Translate each layer by 0.5px on Z-axis for thickness
-            const zOffset = (i - layersCount / 2) * 1.5;
-            layer.style.transform = `translateZ(${zOffset}px)`;
-
-            layer.innerHTML = `
-                <div class="heart-shape left"></div>
-                <div class="heart-shape right"></div>
-            `;
+            layer.className = 'heart-layer' + (i === layers - 1 ? ' front' : '');
+            // Spacing layers out for volumetric effect (1px spacing)
+            const z = (i - layers / 2) * 1.5;
+            layer.style.transform = `translateZ(${z}px)`;
+            layer.innerHTML = '<div class="heart-shape-3d"></div>';
             rotationGroup.appendChild(layer);
         }
 
-        const body = document.body;
         const comments = [
             "Люблю тебя!", "Ты моё всё!", "Лучшая ❤️", "С праздником!",
             "Мур!", "❤️❤️❤️", "Счастья нам!", "Самая красивая!",
-            "Обожаю!", "Ты моё вдохновение", "Единственная", "Моё сердечко",
-            "Любофф ✨", "Чмок! 💋", "Навсегда вместе", "Ты чудо! 💖",
-            "Мой мир 🌍", "Зайка 🐰", "Самая нежная 🌸"
+            "Обожаю!", "Ты вдохновение", "Единственная", "Моё сердечко",
+            "Любофф", "Чмок! 💋", "Навсегда вместе", "Ты — чудо!"
         ];
 
         function createStar() {
             const star = document.createElement('div');
             star.className = 'star';
-
             const size = Math.random() * 3 + 1;
-            const startX = Math.random() * window.innerWidth;
-            const duration = Math.random() * 5 + 5;
-            const opacity = Math.random() * 0.8 + 0.2;
-
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.left = `${startX}px`;
-            star.style.top = `-20px`;
-            star.style.opacity = opacity;
-            star.style.boxShadow = `0 0 ${size * 2}px white`;
-
-            body.appendChild(star);
+            star.style.width = star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = '-10px';
+            star.style.opacity = Math.random();
+            document.body.appendChild(star);
 
             star.animate([
-                { transform: `translateY(0) translateX(0)` },
-                { transform: `translateY(${window.innerHeight + 50}px) translateX(${Math.random() * 100 - 50}px)` }
-            ], {
-                duration: duration * 1000,
-                easing: 'linear'
-            }).onfinish = () => star.remove();
+                { transform: 'translateY(0)' },
+                { transform: `translateY(110vh) translateX(${(Math.random() - 0.5) * 200}px)` }
+            ], { duration: 5000 + Math.random() * 5000 }).onfinish = () => star.remove();
         }
 
-        function createComment() {
-            const comment = document.createElement('div');
-            comment.className = 'falling-comment';
-            comment.innerText = comments[Math.floor(Math.random() * comments.length)];
+        function spawnFlyer() {
+            const flyer = document.createElement('div');
+            flyer.className = 'flyer';
+            flyer.innerText = comments[Math.floor(Math.random() * comments.length)];
 
-            const startX = Math.random() * window.innerWidth;
-            const duration = Math.random() * 6 + 6;
-            const drift = (Math.random() - 0.5) * 400; // Large horizontal drift
-            const rotate = (Math.random() - 0.5) * 60; // Random tilt
+            // Random start position from any side
+            const side = Math.floor(Math.random() * 4);
+            let startX, startY, endX, endY;
 
-            comment.style.left = `${startX}px`;
-            comment.style.top = `-60px`;
+            if (side === 0) { // Top
+                startX = Math.random() * 100; startY = -10;
+                endX = startX + (Math.random() - 0.5) * 100; endY = 110;
+            } else if (side === 1) { // Bottom
+                startX = Math.random() * 100; startY = 110;
+                endX = startX + (Math.random() - 0.5) * 100; endY = -10;
+            } else if (side === 2) { // Left
+                startX = -20; startY = Math.random() * 100;
+                endX = 120; endY = startY + (Math.random() - 0.5) * 100;
+            } else { // Right
+                startX = 120; startY = Math.random() * 100;
+                endX = -20; endY = startY + (Math.random() - 0.5) * 100;
+            }
 
-            body.appendChild(comment);
+            flyer.style.left = startX + 'vw';
+            flyer.style.top = startY + 'vh';
+            document.body.appendChild(flyer);
 
-            comment.animate([
-                { transform: `translate(0, 0) rotate(0deg) scale(0.8)`, opacity: 0 },
-                { transform: `translate(${drift * 0.1}px, 100px) rotate(${rotate * 0.2}deg) scale(1)`, opacity: 1, offset: 0.1 },
-                { transform: `translate(${drift}px, ${window.innerHeight + 100}px) rotate(${rotate}deg) scale(0.9)`, opacity: 0 }
+            flyer.animate([
+                { transform: 'translate(0,0) rotate(0deg) scale(0.5)', opacity: 0 },
+                { transform: `translate(${(endX - startX) / 2}vw, ${(endY - startY) / 2}vh) rotate(10deg) scale(1)`, opacity: 1, offset: 0.2 },
+                { transform: `translate(${endX - startX}vw, ${endY - startY}vh) rotate(20deg) scale(0.8)`, opacity: 0 }
             ], {
-                duration: duration * 1000,
-                easing: 'ease-out'
-            }).onfinish = () => comment.remove();
+                duration: 8000 + Math.random() * 5000,
+                easing: 'linear'
+            }).onfinish = () => flyer.remove();
         }
 
         function createBurst(e) {
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 20; i++) {
                 const heart = document.createElement('div');
                 heart.innerHTML = '❤️';
                 heart.style.position = 'absolute';
                 heart.style.left = e.clientX + 'px';
                 heart.style.top = e.clientY + 'px';
-                heart.style.fontSize = Math.random() * 2rem + 1rem;
+                // FIXED: Using string interpolation for rem to avoid JS reference error
+                heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
                 heart.style.pointerEvents = 'none';
                 heart.style.zIndex = '100';
-                body.appendChild(heart);
+                document.body.appendChild(heart);
 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 300 + 100;
-                const destX = Math.cos(angle) * distance;
-                const destY = Math.sin(angle) * distance;
+                const dist = 100 + Math.random() * 200;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist;
 
                 heart.animate([
-                    { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1 },
-                    { transform: `translate(${destX}px, ${destY}px) scale(0) rotate(${Math.random() * 720}deg)`, opacity: 0 }
-                ], {
-                    duration: 1200 + Math.random() * 800,
-                    easing: 'cubic-bezier(0, .9, .57, 1)'
-                }).onfinish = () => heart.remove();
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], { duration: 1000 + Math.random() * 1000 }).onfinish = () => heart.remove();
             }
         }
 
-        // Initialization
-        setInterval(createStar, 70);
-        setInterval(createComment, 600); // Fast comments frequency
+        // Intervals
+        setInterval(createStar, 100);
+        setInterval(spawnFlyer, 1200);
 
-        // Dynamic Glow tracking
+        // Interaction
         document.addEventListener('mousemove', (e) => {
             const flare = document.getElementById('flare');
-            const x = (e.clientX / window.innerWidth - 0.5);
-            const y = (e.clientY / window.innerHeight - 0.5);
             flare.style.background = `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, rgba(255,255,255,0.08) 0%, transparent 20%)`;
         });
     </script>
