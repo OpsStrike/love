@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,8 @@
     <style>
         :root {
             --primary-red: #ff3366;
-            --heart-glow: rgba(255, 51, 102, 0.6);
+            --heart-glow: rgba(255, 51, 102, 0.8);
             --bg-dark: #0f0212;
-            --text-gold: #ffd700;
         }
 
         * {
@@ -20,9 +20,9 @@
 
         body {
             background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 50% 50%, #2d0b28 0%, #0f0212 100%);
+            background-image: radial-gradient(circle at 50% 50%, #2d0b28 0%, #0f0212 100%);
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -32,112 +32,100 @@
             color: white;
         }
 
-        /* --- BACKGROUND BLOOM & GLOWS --- */
-        .glow {
+        #canvas-container {
             position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, var(--heart-glow) 0%, transparent 70%);
-            filter: blur(50px);
-            z-index: 0;
-            opacity: 0.4;
-            pointer-events: none;
-        }
-
-        .glow-1 { top: 10%; left: 10%; }
-        .glow-2 { bottom: 10%; right: 10%; animation: pulse-glow 8s infinite alternate; }
-
-        @keyframes pulse-glow {
-            from { transform: scale(1); opacity: 0.3; }
-            to { transform: scale(1.5); opacity: 0.6; }
-        }
-
-        /* --- PULSATING HEART --- */
-        .heart-container {
-            position: relative;
-            z-index: 10;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .heart-container:hover {
-            transform: scale(1.1);
-        }
-
-        .heart {
-            width: 150px;
-            height: 150px;
-            background-color: var(--primary-red);
-            position: relative;
-            transform: rotate(-45deg);
-            box-shadow: 0 0 50px var(--primary-red);
-            animation: beat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
-        }
-
-        .heart::before,
-        .heart::after {
-            content: '';
-            width: 150px;
-            height: 150px;
-            background-color: var(--primary-red);
-            border-radius: 50%;
-            position: absolute;
-        }
-
-        .heart::before {
-            top: -75px;
-            left: 0;
-        }
-
-        .heart::after {
-            left: 75px;
             top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
         }
 
-        @keyframes beat {
-            0% { transform: scale(1) rotate(-45deg); }
-            15% { transform: scale(1.25) rotate(-45deg); }
-            30% { transform: scale(1) rotate(-45deg); }
-            45% { transform: scale(1.15) rotate(-45deg); }
-            60% { transform: scale(1) rotate(-45deg); }
-            100% { transform: scale(1) rotate(-45deg); }
+        /* --- UI OVERLAYS --- */
+        .ui-container {
+            position: absolute;
+            bottom: 5vh;
+            /* Moved to the bottom */
+            left: 0;
+            width: 100%;
+            z-index: 20;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        /* --- TEXT ELEMENTS --- */
         .title {
-            margin-top: 60px;
             font-size: 3.5rem;
-            font-weight: 800;
+            font-weight: 900;
             text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInTitle 2s forwards 0.5s;
-            background: linear-gradient(45deg, #fff, var(--primary-red), #fff);
+            background: linear-gradient(90deg, #fff, #ffcc00, #ff3366, #ffcc00, #fff);
+            background-size: 200% auto;
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 10px 30px rgba(255, 51, 102, 0.3);
-            z-index: 20;
+            animation: shimmer 3s infinite linear, fadeIn 2s forwards;
+            opacity: 0;
         }
 
         .subtitle {
-            margin-top: 20px;
+            margin-top: 0.5rem;
             font-size: 1.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: fadeIn 2s forwards 0.5s;
             opacity: 0;
-            animation: fadeIn 2s forwards 2.5s;
-            z-index: 20;
         }
 
-        @keyframes fadeInTitle {
-            0% { opacity: 0; transform: translateY(30px) scale(0.9); filter: blur(10px); }
-            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .ui-container {
+                bottom: 8vh;
+            }
+        }
+
+        @keyframes shimmer {
+            to {
+                background-position: 200% center;
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* --- FALLING ELEMENTS --- */
+        /* --- COMMENT FLYERS --- */
+        .flyer {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            color: white;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            z-index: 5;
+            font-weight: 500;
+        }
+
         .star {
             position: absolute;
             background: white;
@@ -146,154 +134,201 @@
             z-index: 1;
         }
 
-        .falling-comment {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: white;
-            white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            pointer-events: none;
-            z-index: 5;
+        canvas {
+            display: block;
         }
-
-        /* --- FLARES --- */
-        .flare {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: radial-gradient(farthest-corner at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 10%);
-            mix-blend-mode: screen;
-            z-index: 15;
-            animation: moveFlare 20s infinite linear;
-        }
-
-        @keyframes moveFlare {
-            0% { transform: translate(-10%, -10%); }
-            50% { transform: translate(10%, 10%); }
-            100% { transform: translate(-10%, -10%); }
-        }
-
     </style>
+    <!-- Load Three.js from CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
 </head>
-<body>
-    <div class="flare"></div>
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
 
-    <div class="heart-container" onclick="createBurst(event)">
-        <div class="heart"></div>
+<body>
+    <div id="canvas-container"></div>
+
+    <div class="ui-container">
+        <h1 class="title">С 14 Февраля!!!</h1>
+        <div class="subtitle">Люблю тебя ❤️</div>
     </div>
 
-    <h1 class="title">С 14 Февраля!!!</h1>
-    <div class="subtitle">Люблю тебя ❤️</div>
+    <script type="module">
+        import * as THREE from 'three';
 
-    <script>
-        const body = document.body;
-        const comments = ["Люблю тебя!", "Ты моё всё!", "Лучшая ❤️", "С праздником!", "Мур!", "❤️❤️❤️", "Счастья нам!", "Самая красивая!", "Обожаю!"];
+        let scene, camera, renderer, heart;
+        let mouseX = 0, mouseY = 0;
 
-        function createStar() {
-            const star = document.createElement('div');
-            star.className = 'star';
-            
-            const size = Math.random() * 3 + 1;
-            const startX = Math.random() * window.innerWidth;
-            const duration = Math.random() * 5 + 5;
-            const opacity = Math.random() * 0.8 + 0.2;
+        init();
+        animate();
 
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-            star.style.left = `${startX}px`;
-            star.style.top = `-20px`;
-            star.style.opacity = opacity;
-            star.style.boxShadow = `0 0 ${size * 2}px white`;
+        function init() {
+            // SCENE
+            scene = new THREE.Scene();
 
-            body.appendChild(star);
+            // CAMERA
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
 
-            const animation = star.animate([
-                { transform: `translateY(0) translateX(0)` },
-                { transform: `translateY(${window.innerHeight + 50}px) translateX(${Math.random() * 100 - 50}px)` }
-            ], {
-                duration: duration * 1000,
-                easing: 'linear'
+            // RENDERER
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // LIGHTS
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xff3366, 150);
+            pointLight.position.set(2, 3, 4);
+            scene.add(pointLight);
+
+            const pointLight2 = new THREE.PointLight(0xffcc00, 80);
+            pointLight2.position.set(-3, -2, 2);
+            scene.add(pointLight2);
+
+            // HEART GEOMETRY - Corrected Orientation (Point down)
+            const heartShape = new THREE.Shape();
+            heartShape.moveTo(0, -0.8); // Start at the bottom point
+            heartShape.bezierCurveTo(-0.8, -0.4, -1.4, 0.4, -1.4, 1); // Left lower curve
+            heartShape.bezierCurveTo(-1.4, 1.8, -0.6, 2.2, 0, 1.4); // Left upper lobe
+            heartShape.bezierCurveTo(0.6, 2.2, 1.4, 1.8, 1.4, 1); // Right upper lobe
+            heartShape.bezierCurveTo(1.4, 0.4, 0.8, -0.4, 0, -0.8); // Right lower curve back to point
+
+            const extrudeSettings = {
+                depth: 0.4,
+                bevelEnabled: true,
+                bevelSegments: 48, // Higher segments for extreme roundness
+                steps: 2,
+                bevelSize: 0.4, // Large bevel for pill-like smoothness
+                bevelThickness: 0.4,
+                curveSegments: 128 // Smoother shape outline
+            };
+
+            const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+            geometry.center();
+
+            // MATERIAL
+            const material = new THREE.MeshStandardMaterial({
+                color: 0xff3366,
+                roughness: 0.2, // Smoother surface reflection
+                metalness: 0.6,
+                emissive: 0x220000,
             });
 
-            animation.onfinish = () => star.remove();
+            heart = new THREE.Mesh(geometry, material);
+            scene.add(heart);
+
+            // Interaction
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+            renderer.domElement.addEventListener('click', createBurst);
         }
 
-        function createComment() {
-            const comment = document.createElement('div');
-            comment.className = 'falling-comment';
-            comment.innerText = comments[Math.floor(Math.random() * comments.length)];
-            
-            const startX = Math.random() * (window.innerWidth - 100);
-            const duration = Math.random() * 7 + 8;
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
 
-            comment.style.left = `${startX}px`;
-            comment.style.top = `-50px`;
+        function onMouseMove(event) {
+            mouseX = (event.clientX - window.innerWidth / 2) / 100;
+            mouseY = (event.clientY - window.innerHeight / 2) / 100;
+        }
 
-            body.appendChild(comment);
+        function animate() {
+            requestAnimationFrame(animate);
 
-            const animation = comment.animate([
-                { transform: `translateY(0) rotate(0deg)`, opacity: 0 },
-                { transform: `translateY(100px) rotate(${Math.random() * 10 - 5}deg)`, opacity: 1, offset: 0.1 },
-                { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 40 - 20}deg)`, opacity: 0 }
-            ], {
-                duration: duration * 1000,
-                easing: 'ease-in'
-            });
+            // Rotation around vertical axis (Y)
+            heart.rotation.y += 0.015;
 
-            animation.onfinish = () => comment.remove();
+            // Pulse animation
+            const time = Date.now() * 0.005;
+            const pulse = 1 + Math.sin(time * 2.5) * 0.04;
+            heart.scale.set(pulse, pulse, pulse);
+
+            // Interaction: follow mouse subtly
+            heart.rotation.x = THREE.MathUtils.lerp(heart.rotation.x, mouseY * 0.15, 0.05);
+            heart.rotation.z = THREE.MathUtils.lerp(heart.rotation.z, -mouseX * 0.1, 0.05);
+
+            renderer.render(scene, camera);
         }
 
         function createBurst(e) {
-            for(let i = 0; i < 15; i++) {
-                const heart = document.createElement('div');
-                heart.innerHTML = '❤️';
-                heart.style.position = 'absolute';
-                heart.style.left = e.clientX + 'px';
-                heart.style.top = e.clientY + 'px';
-                heart.style.fontSize = Math.random() * 20 + 20 + 'px';
-                heart.style.pointerEvents = 'none';
-                heart.style.zIndex = '100';
-                body.appendChild(heart);
+            for (let i = 0; i < 25; i++) {
+                const h = document.createElement('div');
+                h.innerHTML = '❤️';
+                h.style.position = 'absolute';
+                h.style.left = e.clientX + 'px';
+                h.style.top = e.clientY + 'px';
+                h.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                h.style.pointerEvents = 'none';
+                h.style.zIndex = '100';
+                document.body.appendChild(h);
 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 200 + 100;
-                const destX = Math.cos(angle) * distance;
-                const destY = Math.sin(angle) * distance;
+                const dist = 100 + Math.random() * 250;
+                const tx = Math.cos(angle) * dist;
+                const ty = Math.sin(angle) * dist;
 
-                const anim = heart.animate([
-                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                    { transform: `translate(${destX}px, ${destY}px) scale(0)`, opacity: 0 }
-                ], {
-                    duration: 1000 + Math.random() * 1000,
-                    easing: 'cubic-bezier(0, .9, .57, 1)'
-                });
-
-                anim.onfinish = () => heart.remove();
+                h.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                ], { duration: 1200 + Math.random() * 1000 }).onfinish = () => h.remove();
             }
         }
 
-        // Initialization
-        setInterval(createStar, 100);
-        setInterval(createComment, 2000);
+        // --- BACKGROUND ELEMENTS ---
+        setInterval(() => {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 3 + 1;
+            star.style.width = star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = '-10px';
+            star.style.opacity = Math.random();
+            document.body.appendChild(star);
 
-        // Lens flare follows mouse slightly
-        document.addEventListener('mousemove', (e) => {
-            const flare = document.querySelector('.flare');
-            const x = (e.clientX / window.innerWidth - 0.5) * 20;
-            const y = (e.clientY / window.innerHeight - 0.5) * 20;
-            flare.style.transform = `translate(${x}px, ${y}px)`;
-        });
+            star.animate([
+                { transform: 'translateY(0)' },
+                { transform: `translateY(110vh) translateX(${(Math.random() - 0.5) * 200}px)` }
+            ], { duration: 5000 + Math.random() * 5000 }).onfinish = () => star.remove();
+        }, 100);
+
+        setInterval(() => {
+            const flyer = document.createElement('div');
+            flyer.className = 'flyer';
+            const comments = [
+                "Люблю тебя!", "Ты моё всё!", "Лучшая ❤️", "С праздником!",
+                "Мур!", "❤️❤️❤️", "Счастья нам!", "Самая красивая!",
+                "Обожаю!", "Ты вдохновение", "Единственная", "Моё сердечко",
+                "Любофф", "Чмок! 💋", "Навсегда вместе", "Ты — чудо!"
+            ];
+            flyer.innerText = comments[Math.floor(Math.random() * comments.length)];
+
+            const side = Math.floor(Math.random() * 4);
+            let sx, sy, ex, ey;
+            if (side === 0) { sx = Math.random() * 120 - 10; sy = -15; ex = sx + (Math.random() - 0.5) * 100; ey = 115; }
+            else if (side === 1) { sx = Math.random() * 120 - 10; sy = 115; ex = sx + (Math.random() - 0.5) * 100; ey = -15; }
+            else if (side === 2) { sx = -15; sy = Math.random() * 120 - 10; ex = 115; ey = sy + (Math.random() - 0.5) * 100; }
+            else { sx = 115; sy = Math.random() * 120 - 10; ex = -15; ey = sy + (Math.random() - 0.5) * 100; }
+
+            flyer.style.left = sx + 'vw';
+            flyer.style.top = sy + 'vh';
+            document.body.appendChild(flyer);
+
+            flyer.animate([
+                { transform: `translate(0,0) rotate(0deg) scale(0.5)`, opacity: 0 },
+                { transform: `translate(${(ex - sx) / 2}vw, ${(ey - sy) / 2}vh) rotate(20deg) scale(1)`, opacity: 1, offset: 0.15 },
+                { transform: `translate(${ex - sx}vw, ${ey - sy}vh) rotate(60deg) scale(0.8)`, opacity: 0 }
+            ], { duration: 8000 + Math.random() * 5000 }).onfinish = () => flyer.remove();
+        }, 800);
 
     </script>
 </body>
+
 </html>
